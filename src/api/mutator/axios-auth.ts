@@ -1,7 +1,7 @@
 import Axios, { AxiosRequestConfig, AxiosPromise, AxiosError } from 'axios'
 
 //import { getAuthViaCookies, getRecord } from '../../auth'
-import { LoggedIn as PLoggedIn } from '../endpoints/auth'
+//import { LoggedIn as PLoggedIn } from '../endpoints/auth'
 
 export const AXIOS_INSTANCE = Axios.create({ baseURL: '/' })
 
