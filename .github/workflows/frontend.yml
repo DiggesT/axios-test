@@ -1,27 +1,22 @@
 name: Frontend CI
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+build:
+  runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: frontend
+  defaults:
+    run:
+      working-directory: frontend
 
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/download-artifact@v3
-        with:
-          name: openapi-docs
-          path: ${{ github.workspace }}/src/api/docs/
-      - name: Use Node.js 18.x
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-      - run: npm ci
-      - run: npm run api # Generate OpenAPI models/endpoints
-      - run: npm test
-      - name: Configure NPM
-        run: echo "//npm.pkg.github.com/:_authToken=${NPM_AUTH_TOKEN}" > ~/.npmrc
-        env:
-          NPM_AUTH_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
+  steps:
+    - uses: actions/checkout@v3
+    - uses: actions/download-artifact@v3
+      with:
+        name: openapi-docs
+        path: ${{ github.workspace }}/src/api/docs/
+    - name: Use Node.js 18.x
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+    - run: npm ci
+    - run: npm run api # Generate OpenAPI models/endpoints
+    - run: npm test
