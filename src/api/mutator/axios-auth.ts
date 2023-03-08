@@ -1,20 +1,25 @@
-import Axios, { AxiosRequestConfig, AxiosPromise, AxiosError } from 'axios'
+import Axios, { AxiosError, AxiosRequestConfig } from 'axios';
+ 
+export const AXIOS_INSTANCE = Axios.create({ baseURL: '<BACKEND URL>' }); // use your own URL here or environment variable
 
-import { LoggedIn as PLoggedIn } from '../endpoints/auth'
-
-export const AXIOS_INSTANCE = Axios.create({ baseURL: '/' })
-
-export const axiosAuth = <T>(config: AxiosRequestConfig, options?: AxiosRequestConfig): AxiosPromise<T> => {
-
-  const Logged : PLoggedIn | undefined = undefined
-
+// add a second `options` argument here if you want to pass extra options to each generated query
+export const axiosAuth = <T>(
+  config: AxiosRequestConfig,
+  options?: AxiosRequestConfig,
+): Promise<T> => {
+  const source = Axios.CancelToken.source();
   const promise = AXIOS_INSTANCE({
     ...config,
-  })
+    ...options,
+    cancelToken: source.token,
+  }).then(({ data }) => data);
 
-  console.log('foo')
+  // @ts-ignore
+  promise.cancel = () => {
+    source.cancel('Query was cancelled');
+  };
 
-  return promise
-}
+  return promise;
+};
 
-export type ErrorType<Error> = AxiosError<Error>
+export type ErrorType<Error> = AxiosError<Error>;
